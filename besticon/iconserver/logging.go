@@ -34,6 +34,10 @@ func (w *loggingWriter) Write(b []byte) (int, error) {
 
 func newLoggingMux() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/")
+        w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "*")
+        w.Header().Set("Access-Control-Max-Age", "600")
 		start := time.Now()
 		writer := loggingWriter{w, 0, 0}
 		http.DefaultServeMux.ServeHTTP(&writer, req)
@@ -49,5 +53,6 @@ func newLoggingMux() http.HandlerFunc {
 			float64(duration)/float64(time.Millisecond),
 			writer.length,
 		)
+		
 	}
 }
